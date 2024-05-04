@@ -25,12 +25,7 @@ public abstract class Monster extends Character
     public int getMonsterType(){
         return this.type;
     }
-    public boolean isDie(){
-        boolean status = false;
-        if(this.getHP() <= 0)
-            status = true;
-        return status;
-    }
+    
 //------------------------------ Abstract Methods ---------------------------------
 
     public abstract void setItemToDrop();

@@ -56,6 +56,8 @@ public class RegularMonster extends Monster
         {
             ranNum = random.nextInt(itemsToDrop.size()) + 1;            //1,2,3, .... size of itemToDrop
             itemToLoot = itemsToDrop.get(ranNum - 1);
+            itemToLoot.setX(this.getX());
+            itemToLoot.setY(this.getY());
         }
         
         return itemToLoot;     

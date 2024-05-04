@@ -133,19 +133,6 @@ public abstract class Character
 //----------------------------------------- Abstract Methods -----------------------------------
     public abstract String getMark();
     
-//----------------------------------------- die() ----------------------------------------------
-
-    public boolean die()
-    {
-        if(this.HP <= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
 
 //----------------------------------------- Moving Methods -----------------------------------------

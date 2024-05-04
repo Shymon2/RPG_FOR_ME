@@ -26,6 +26,12 @@ public abstract class Item
     {return this.x;}
     public int getY()
     {return this.y;}
+
+    public int setX(int x)
+    {return this.x = x;}
+    public int setY(int y)
+    {return this.y = y;}
+    
     public String getName()
     {return this.name;}
     public int getType()

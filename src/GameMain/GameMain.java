@@ -12,14 +12,15 @@ import MAP.*;
 public class GameMain {
     
     
-    public Player Hero(String name){
+    private Player Hero(String name){
         Player player = new Player(name, 1000, 10, 0, 5, 0, 0);
         return player;
     }
-    public String path = "src\\InputFile\\map1.txt";
+    private String path = "src\\InputFile\\map1.txt";
     private Scanner input = new Scanner(System.in);
 
 //--------------------------------------------------------------
+public GameMain(){}
     public void moveControl(Map m, Player p, Inventory i) {
         int choice;
         boolean status = true;
@@ -154,7 +155,6 @@ public class GameMain {
             p.showState();
         }
     }
-
     public boolean isInRange(Character obj1, Character obj2){
         boolean status = false;
         int max_X = obj1.getX() + obj1.getRange();
@@ -165,10 +165,10 @@ public class GameMain {
             status = true;
         return status;
     }
-    public void attackMenu(Map m, Player obj){
+    public void attackMenu(Map m, Player p, Inventory j){
         ArrayList<Monster> targets = new ArrayList<Monster>();
         for(int i = 0; i < m.monsters.size(); i++){
-            if(isInRange(obj, m.monsters.get(i)))
+            if(isInRange(p, m.monsters.get(i)))
                 targets.add(m.monsters.get(i));
         }
         System.out.printf("|%10s | %20s | %10s |\n", "No.",
@@ -183,11 +183,10 @@ public class GameMain {
         System.out.print("Choose a number (0: Exit || 1 - " + targets.size() + ") to attack monster: ");
         choice = input.nextInt();
         if(choice > 0){
-            targets.get(choice - 1).takeDamage(obj.getAttack());
-            updateMonsters(m, obj);
-            updatePlayer(m, obj);
+            targets.get(choice - 1).takeDamage(p.getAttack());
+            updateGame(m, p, j);
             m.drawMap();
-            ((Player) obj).showState();
+            p.showState();
             targets.clear();
         }
         else if(choice < 0)
@@ -197,8 +196,6 @@ public class GameMain {
             m.drawMap();
         }
     }
-
-
     public void MainMenu(Map m, Player obj, Inventory i){
         int choice;
 
@@ -220,7 +217,7 @@ public class GameMain {
                     inventoryControl(m, obj, i);
                     break;
                 case 3:
-                    attackMenu(m, obj);         
+                    attackMenu(m, obj, i);         
                     break;
                 case 4:
                     System.out.println("Thanks for playing");
@@ -231,7 +228,6 @@ public class GameMain {
             }           
         } while(choice != 4);
     }
-    public GameMain(){}
     public void StartGame(){
         String name, key;
         System.out.print("Enter name of Player: ");
@@ -249,6 +245,7 @@ public class GameMain {
         updatePlayer(m, p);
         updateItems(m, p, i);
         updateMonsters(m, p);
+      
     }
     public void updatePlayer(Map m, Player p)
     {
@@ -263,16 +260,21 @@ public class GameMain {
             else JOptionPane.showMessageDialog(null, "Inventory is full!!!");
         } 
     }
-    public void updateMonsters(Map m, Player obj){
+    public void updateMonsters(Map m, Player p){
         for(int i = 0; i < m.monsters.size(); i++){
-            if(isInRange(m.monsters.get(i), obj)){
-                JOptionPane.showMessageDialog(null, "WARNING: " + m.monsters.get(i).getName() + " attacked you. You lost " + obj.takeDamage(m.monsters.get(i).getAttack()) + " HP!!!");
+            if(m.monsters.get(i).getHP() == 0){
+                m.addItem(m.monsters.get(i).lootItem());
+                m.removeMonsterHavingPosition(m.monsters.get(i).getX(), m.monsters.get(i).getY());
+            }else{
+            if(isInRange(m.monsters.get(i), p)){
+                JOptionPane.showMessageDialog(null, "WARNING: " + m.monsters.get(i).getName() + " attacked you. You lost " + p.takeDamage(m.monsters.get(i).getAttack()) + " HP!!!");
             }
             else{
                 if(m.monsters.get(i) instanceof RegularMonster)
                 ((RegularMonster)m.monsters.get(i)).randomMove(m);
                 else if(m.monsters.get(i) instanceof TargetMonster)
                 ((TargetMonster)m.monsters.get(i)).shortestWayMove();
+            }
             }
         }
     }
@@ -289,12 +291,7 @@ public class GameMain {
         }
         return status;
     }
-    public void dropItem(Map m){
-        for(int i = 0; i < m.monsters.size(); i++){
-            if(m.monsters.get(i).isDie())
-                m.items.add(m.monsters.get(i).lootItem());
-        }
-    }
+
 
     public static void main(String[] args) {
         GameMain gm = new GameMain();

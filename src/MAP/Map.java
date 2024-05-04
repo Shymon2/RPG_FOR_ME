@@ -233,15 +233,17 @@ public class Map
 
     //Adding an item in the map
     public void addItem(Item item)
-    {
-        if(!isSolidAt(item.getX(), item.getY()))
-        {
-            this.items.add(item);
-        }
-        else
-        {
-            System.out.println("ERROR: You Cannot Set an Item into a Solid Area!");
-        }
+    {   
+        if(item != null){
+            if(!isSolidAt(item.getX(), item.getY()))
+            {
+                this.items.add(item);
+            }
+            else
+            {
+                System.out.println("ERROR: You Cannot Set an Item into a Solid Area!");
+            }
+        }else{}
     }
 
 
@@ -256,6 +258,7 @@ public class Map
             {
                 found = true;
                 this.monsters.remove(monster);
+                System.out.println("Deleted monster");
                 break;
             }
         }
